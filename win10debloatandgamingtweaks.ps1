@@ -29,6 +29,7 @@ $wmic = Get-WindowsCapability -Online | Where-Object { $_.Name -like "*WMIC*" }
 
 if ($wmic.State -ne 'Installed') {
     try {
+    	Write-Host "WMIC is not installed, installing..."
         Add-WindowsCapability -Online -Name $wmic.Name -ErrorAction Stop | Out-Null
         Write-Host "WMIC installed successfully."
     } catch {
