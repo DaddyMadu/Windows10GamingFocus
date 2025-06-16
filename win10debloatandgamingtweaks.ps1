@@ -25,6 +25,20 @@ $currentexename = (([Diagnostics.Process]::GetCurrentProcess().ProcessName) + '.
 		exit
 	}
 Clear-Host
+$wmic = Get-WindowsCapability -Online | Where-Object { $_.Name -like "*WMIC*" }
+
+if ($wmic.State -ne 'Installed') {
+    try {
+        Add-WindowsCapability -Online -Name $wmic.Name -ErrorAction Stop | Out-Null
+        Write-Host "WMIC installed successfully."
+    } catch {
+        Write-Host "Failed to install WMIC: $($_.Exception.Message)"
+    }
+} else {
+    Write-Host "WMIC already installed."
+}
+Start-Sleep -s 5
+Clear-Host
 # Desktop presets
 $tweaks = @(
 	### Require administrator privileges ###
